@@ -21,6 +21,7 @@ module HyperRecord
       @state_key = "#{self.class.to_s}_#{self.object_id}"
       @observers = Set.new
       @registered_collections = Set.new
+      @update_on_link = {}
 
       _initialize_from_hash(record_hash)
 
@@ -221,6 +222,12 @@ module HyperRecord
       payload_hash = other_record.to_hash
       self.class._promise_post("#{resource_base_uri}/#{self.id}/relations/#{relation_name}.json", { data: payload_hash }).then do |response|
         other_record.instance_variable_get(:@properties).merge!(response.json[other_record.class.to_s.underscore])
+        @update_on_link.keys.each do |method|
+          @fetch_states[method] = 'u'
+        end
+        other_record.instance_variable_get(:@update_on_link).keys.each do |method|
+          other_record.instance_variable_get(:@fetch_states)[method] = 'u'
+        end
         _notify_observers
         other_record._notify_observers
         self
@@ -275,6 +282,12 @@ module HyperRecord
       raise "No relation for record of type #{other_record.class}" unless reflections.has_key?(relation_name)
       @relations[relation_name].delete_if { |cr| cr == other_record } if !called_from_collection && @fetch_states[relation_name] == 'f'
       self.class._promise_delete("#{resource_base_uri}/#{@properties[:id]}/relations/#{relation_name}.json?record_id=#{other_record.id}").then do |response|
+        @update_on_link.keys.each do |method|
+          @fetch_states[method] = 'u'
+        end
+        other_record.instance_variable_get(:@update_on_link).keys.each do |method|
+          other_record.instance_variable_get(:@fetch_states)[method] = 'u'
+        end
         _notify_observers
         other_record._notify_observers
         self
@@ -339,6 +352,10 @@ module HyperRecord
             if data[:cause][:destroyed]
               c_record.instance_variable_set(:@remotely_destroyed, true)
               c_record._local_destroy
+            else
+              c_record.instance_variable_get(:@update_on_link).keys.each do |method|
+                c_record.instance_variable_get(:@fetch_states)[method] = 'u'
+              end
             end
             if `Date.parse(#{c_record.updated_at}) >= Date.parse(#{data[:cause][:updated_at]})`
               if @fetch_states[data[:relation]] == 'f'
@@ -350,9 +367,12 @@ module HyperRecord
           end
         end
         @fetch_states[data[:relation]] = 'u'
-        send("promise_#{data[:relation]}").then do |collection|
+        @update_on_link.keys.each do |method|
+          @fetch_states[method] = 'u'
+        end
+        send("promise_#{data[:relation]}").then do |_collection|
           _notify_observers
-        end.fail do |response|
+        end.fail do |_response|
           error_message = "#{self}[#{self.id}].#{data[:relation]} failed to update!"
           `console.error(error_message)`
         end
@@ -365,9 +385,9 @@ module HyperRecord
           _notify_observers
         else
           # rest_method without params
-          send("promise_#{data[:rest_method]}").then do |result|
+          send("promise_#{data[:rest_method]}").then do |_result|
             _notify_observers
-          end.fail do |response|
+          end.fail do |_response|
             error_message = "#{self}[#{self.id}].#{data[:rest_method]} failed to update!"
             `console.error(error_message)`
           end
@@ -384,10 +404,10 @@ module HyperRecord
         return if `Date.parse(#{@properties[:updated_at]}) >= Date.parse(#{data[:updated_at]})`
       end
       self.class._class_fetch_states["record_#{id}"] = 'u'
-      self.class._promise_find(@properties[:id], self).then do |record|
+      self.class._promise_find(@properties[:id], self).then do |_record|
         _notify_observers
         self
-      end.fail do |response|
+      end.fail do |_response|
         error_message = "#{self} failed to update!"
         `console.error(error_message)`
       end

@@ -139,6 +139,7 @@ module HyperRecord
         unless @rest_methods.has_key?(name)
           @rest_methods[name] = options
           @rest_methods[name] = { result: options[:default_result] }
+          @update_on_link[name] = {}
         end
         raise "#{self.class.to_s}[_no_id_].#{name}, can't execute instance collection_query_method without id!" unless self.id
         self.class._promise_get_or_patch("#{resource_base_uri}/#{self.id}/methods/#{name}.json?timestamp=#{`Date.now() + Math.random()`}").then do |response_json|
@@ -160,6 +161,7 @@ module HyperRecord
         unless @rest_methods.has_key?(name)
           @rest_methods[name] = options
           @rest_methods[name] = { result: options[:default_result] }
+          @update_on_link[name] = {}
         end
         unless @fetch_states.has_key?(name) && 'fi'.include?(@fetch_states[name])
           self.send("promise_#{name}")
