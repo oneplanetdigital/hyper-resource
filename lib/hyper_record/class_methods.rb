@@ -122,6 +122,58 @@ module HyperRecord
       # end
     end
 
+    # macro define collection_query_method, RPC on instance level of a record of current HyperRecord class
+    # The supplied block must return a Array of Records!
+    #
+    # @param name [Symbol] name of method
+    # @param options [Hash] with known keys:
+    #   default_result: result to present during render during method call in progress, is a Array by default, should be a Enumerable in any case
+    #
+    # This macro defines additional methods:
+    def collection_query_method(name, options = { default_result: []})
+      # @!method promise_[name]
+      # @return [Promise] on success the .then block will receive the result of the RPC call as arg
+      #    on failure the .fail block will receive the HTTP response object as arg
+      define_method("promise_#{name}") do
+        @fetch_states[name] = 'i'
+        unless @rest_methods.has_key?(name)
+          @rest_methods[name] = options
+          @rest_methods[name] = { result: options[:default_result] }
+        end
+        raise "#{self.class.to_s}[_no_id_].#{name}, can't execute instance collection_query_method without id!" unless self.id
+        self.class._promise_get_or_patch("#{resource_base_uri}/#{self.id}/methods/#{name}.json?timestamp=#{`Date.now() + Math.random()`}").then do |response_json|
+          collection = self.class._convert_array_to_collection(response_json[:result], self)
+          @rest_methods[name][:result] = collection
+          @fetch_states[name] = 'f'
+          _notify_observers
+          @rest_methods[name][:result]
+        end.fail do |response|
+          error_message = "#{self.class.to_s}[#{self.id}].#{name}, a collection_query_method, failed to execute!"
+          `console.error(error_message)`
+          response
+        end
+      end
+      # @!method [name]
+      # @return result either the default_result ass specified in the options or the real result if the RPC call already finished
+      define_method(name) do
+        _register_observer
+        unless @rest_methods.has_key?(name)
+          @rest_methods[name] = options
+          @rest_methods[name] = { result: options[:default_result] }
+        end
+        unless @fetch_states.has_key?(name) && 'fi'.include?(@fetch_states[name])
+          self.send("promise_#{name}")
+        end
+        @rest_methods[name][:result]
+      end
+      # @!method update_[name] mark internal structures so that the method is called again once it is requested again
+      # @return nil
+      define_method("update_#{name}") do
+        @fetch_states[name] = 'u'
+        nil
+      end
+    end
+
     # create a new instance of current HyperRecord class and save it to the db
     #
     # @param record_hash [Hash] optional data for the record
@@ -507,7 +559,7 @@ module HyperRecord
       end
     end
 
-    # macro define rest_class_methods, RPC on instance level of a record of current HyperRecord class
+    # macro define rest_methods, RPC on instance level of a record of current HyperRecord class
     #
     # @param name [Symbol] name of method
     # @param options [Hash] with known keys:
