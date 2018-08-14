@@ -150,6 +150,32 @@ side ORM, on the client side options are ignored.</p>
         <li class="public ">
   <span class="summary_signature">
     
+      <a href="#collection_query_method-instance_method" title="#collection_query_method (instance method)">#<strong>collection_query_method</strong>(name, options = { default_result: []})  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>macro define collection_query_method, RPC on instance level of a record of
+current HyperRecord class The supplied block must return a Array of
+Records!.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
       <a href="#create-instance_method" title="#create (instance method)">#<strong>create</strong>(record_hash = {})  &#x21d2; HyperRecord </a>
     
 
@@ -531,8 +557,8 @@ class.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>macro define rest_class_methods, RPC on instance level of a record of
-current HyperRecord class.</p>
+<p>macro define rest_methods, RPC on instance level of a record of current
+HyperRecord class.</p>
 </div></span>
   
 </li>
@@ -635,7 +661,6 @@ client side options are ignored.</p>
       <pre class="lines">
 
 
-25
 26
 27
 28
@@ -644,10 +669,11 @@ client side options are ignored.</p>
 31
 32
 33
-34</pre>
+34
+35</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/hyper_record/class_methods.rb', line 25</span>
+      <pre class="code"><span class="info file"># File 'lib/hyper_record/class_methods.rb', line 26</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_all'>all</span>
   <span class='id identifier rubyid__register_class_observer'>_register_class_observer</span>
@@ -755,7 +781,6 @@ further options</p>
       <pre class="lines">
 
 
-65
 66
 67
 68
@@ -812,10 +837,11 @@ further options</p>
 119
 120
 121
-122</pre>
+122
+123</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/hyper_record/class_methods.rb', line 65</span>
+      <pre class="code"><span class="info file"># File 'lib/hyper_record/class_methods.rb', line 66</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_belongs_to'>belongs_to</span><span class='lparen'>(</span><span class='id identifier rubyid_direction'>direction</span><span class='comma'>,</span> <span class='id identifier rubyid_name'>name</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span> <span class='label'>type:</span> <span class='kw'>nil</span> <span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='id identifier rubyid_name'>name</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span><span class='lparen'>(</span><span class='const'>Hash</span><span class='rparen'>)</span>
@@ -875,6 +901,175 @@ further options</p>
 </span>  <span class='comment'>#   @relations[name]
 </span>  <span class='comment'># end
 </span><span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="collection_query_method-instance_method">
+  
+    #<strong>collection_query_method</strong>(name, options = { default_result: []})  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>macro define collection_query_method, RPC on instance level of a record of
+current HyperRecord class The supplied block must return a Array of
+Records!</p>
+
+<p>This macro defines additional methods:</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>name</span>
+      
+      
+        <span class='type'>(<tt>Symbol</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>name of method</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>options</span>
+      
+      
+        <span class='type'>(<tt>Hash</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>{ default_result: []}</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>with known keys: default_result: result to present during render during
+method call in progress, is a Array by default, should be a Enumerable in
+any case</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/hyper_record/class_methods.rb', line 133</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_collection_query_method'>collection_query_method</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span> <span class='label'>default_result:</span> <span class='lbracket'>[</span><span class='rbracket'>]</span><span class='rbrace'>}</span><span class='rparen'>)</span>
+  <span class='comment'># @!method promise_[name]
+</span>  <span class='comment'># @return [Promise] on success the .then block will receive the result of the RPC call as arg
+</span>  <span class='comment'>#    on failure the .fail block will receive the HTTP response object as arg
+</span>  <span class='id identifier rubyid_define_method'>define_method</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>promise_</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_name'>name</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span> <span class='kw'>do</span>
+    <span class='ivar'>@fetch_states</span><span class='lbracket'>[</span><span class='id identifier rubyid_name'>name</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>i</span><span class='tstring_end'>&#39;</span></span>
+    <span class='kw'>unless</span> <span class='ivar'>@rest_methods</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='rparen'>)</span>
+      <span class='ivar'>@rest_methods</span><span class='lbracket'>[</span><span class='id identifier rubyid_name'>name</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span>
+      <span class='ivar'>@rest_methods</span><span class='lbracket'>[</span><span class='id identifier rubyid_name'>name</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='lbrace'>{</span> <span class='label'>result:</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:default_result</span><span class='rbracket'>]</span> <span class='rbrace'>}</span>
+      <span class='ivar'>@update_on_link</span><span class='lbracket'>[</span><span class='id identifier rubyid_name'>name</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
+    <span class='kw'>end</span>
+    <span class='id identifier rubyid_raise'>raise</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_class'>class</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='embexpr_end'>}</span><span class='tstring_content'>[_no_id_].</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_name'>name</span><span class='embexpr_end'>}</span><span class='tstring_content'>, can&#39;t execute instance collection_query_method without id!</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>unless</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_id'>id</span>
+    <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_class'>class</span><span class='period'>.</span><span class='id identifier rubyid__promise_get_or_patch'>_promise_get_or_patch</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_resource_base_uri'>resource_base_uri</span><span class='embexpr_end'>}</span><span class='tstring_content'>/</span><span class='embexpr_beg'>#{</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_id'>id</span><span class='embexpr_end'>}</span><span class='tstring_content'>/methods/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_name'>name</span><span class='embexpr_end'>}</span><span class='tstring_content'>.json?timestamp=</span><span class='embexpr_beg'>#{</span><span class='backtick'>`</span><span class='tstring_content'>Date.now() + Math.random()</span><span class='tstring_end'>`</span></span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_then'>then</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_response_json'>response_json</span><span class='op'>|</span>
+      <span class='id identifier rubyid_collection'>collection</span> <span class='op'>=</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_class'>class</span><span class='period'>.</span><span class='id identifier rubyid__convert_array_to_collection'>_convert_array_to_collection</span><span class='lparen'>(</span><span class='id identifier rubyid_response_json'>response_json</span><span class='lbracket'>[</span><span class='symbol'>:result</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='kw'>self</span><span class='rparen'>)</span>
+      <span class='ivar'>@rest_methods</span><span class='lbracket'>[</span><span class='id identifier rubyid_name'>name</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='symbol'>:result</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_collection'>collection</span>
+      <span class='ivar'>@fetch_states</span><span class='lbracket'>[</span><span class='id identifier rubyid_name'>name</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>f</span><span class='tstring_end'>&#39;</span></span>
+      <span class='id identifier rubyid__notify_observers'>_notify_observers</span>
+      <span class='ivar'>@rest_methods</span><span class='lbracket'>[</span><span class='id identifier rubyid_name'>name</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='symbol'>:result</span><span class='rbracket'>]</span>
+    <span class='kw'>end</span><span class='period'>.</span><span class='id identifier rubyid_fail'>fail</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_response'>response</span><span class='op'>|</span>
+      <span class='id identifier rubyid_error_message'>error_message</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_class'>class</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='embexpr_end'>}</span><span class='tstring_content'>[</span><span class='embexpr_beg'>#{</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_id'>id</span><span class='embexpr_end'>}</span><span class='tstring_content'>].</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_name'>name</span><span class='embexpr_end'>}</span><span class='tstring_content'>, a collection_query_method, failed to execute!</span><span class='tstring_end'>&quot;</span></span>
+      <span class='backtick'>`</span><span class='tstring_content'>console.error(error_message)</span><span class='tstring_end'>`</span></span>
+      <span class='id identifier rubyid_response'>response</span>
+    <span class='kw'>end</span>
+  <span class='kw'>end</span>
+  <span class='comment'># @!method [name]
+</span>  <span class='comment'># @return result either the default_result ass specified in the options or the real result if the RPC call already finished
+</span>  <span class='id identifier rubyid_define_method'>define_method</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='rparen'>)</span> <span class='kw'>do</span>
+    <span class='id identifier rubyid__register_observer'>_register_observer</span>
+    <span class='kw'>unless</span> <span class='ivar'>@rest_methods</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='rparen'>)</span>
+      <span class='ivar'>@rest_methods</span><span class='lbracket'>[</span><span class='id identifier rubyid_name'>name</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span>
+      <span class='ivar'>@rest_methods</span><span class='lbracket'>[</span><span class='id identifier rubyid_name'>name</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='lbrace'>{</span> <span class='label'>result:</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:default_result</span><span class='rbracket'>]</span> <span class='rbrace'>}</span>
+      <span class='ivar'>@update_on_link</span><span class='lbracket'>[</span><span class='id identifier rubyid_name'>name</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
+    <span class='kw'>end</span>
+    <span class='kw'>unless</span> <span class='ivar'>@fetch_states</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='rparen'>)</span> <span class='op'>&amp;&amp;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>fi</span><span class='tstring_end'>&#39;</span></span><span class='period'>.</span><span class='id identifier rubyid_include?'>include?</span><span class='lparen'>(</span><span class='ivar'>@fetch_states</span><span class='lbracket'>[</span><span class='id identifier rubyid_name'>name</span><span class='rbracket'>]</span><span class='rparen'>)</span>
+      <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_send'>send</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>promise_</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_name'>name</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+    <span class='kw'>end</span>
+    <span class='ivar'>@rest_methods</span><span class='lbracket'>[</span><span class='id identifier rubyid_name'>name</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='symbol'>:result</span><span class='rbracket'>]</span>
+  <span class='kw'>end</span>
+  <span class='comment'># @!method update_[name] mark internal structures so that the method is called again once it is requested again
+</span>  <span class='comment'># @return nil
+</span>  <span class='id identifier rubyid_define_method'>define_method</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>update_</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_name'>name</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span> <span class='kw'>do</span>
+    <span class='ivar'>@fetch_states</span><span class='lbracket'>[</span><span class='id identifier rubyid_name'>name</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>u</span><span class='tstring_end'>&#39;</span></span>
+    <span class='kw'>nil</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
     </td>
   </tr>
 </table>
@@ -946,13 +1141,13 @@ further options</p>
       <pre class="lines">
 
 
-128
-129
-130
-131</pre>
+183
+184
+185
+186</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/hyper_record/class_methods.rb', line 128</span>
+      <pre class="code"><span class="info file"># File 'lib/hyper_record/class_methods.rb', line 183</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_create'>create</span><span class='lparen'>(</span><span class='id identifier rubyid_record_hash'>record_hash</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_record'>record</span> <span class='op'>=</span> <span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_record_hash'>record_hash</span><span class='rparen'>)</span>
@@ -1022,27 +1217,27 @@ further options</p>
       <pre class="lines">
 
 
-147
-148
-149
-150
-151
-152
-153
-154
-155
-156
-157
-158
-159
-160
-161
-162
-163
-164</pre>
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/hyper_record/class_methods.rb', line 147</span>
+      <pre class="code"><span class="info file"># File 'lib/hyper_record/class_methods.rb', line 202</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_find'>find</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_sid'>sid</span> <span class='op'>=</span> <span class='id identifier rubyid_id'>id</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span>
@@ -1154,61 +1349,6 @@ ORMs like ActiveRecord: further options</p>
       <pre class="lines">
 
 
-208
-209
-210
-211
-212
-213
-214
-215
-216
-217
-218
-219
-220
-221
-222
-223
-224
-225
-226
-227
-228
-229
-230
-231
-232
-233
-234
-235
-236
-237
-238
-239
-240
-241
-242
-243
-244
-245
-246
-247
-248
-249
-250
-251
-252
-253
-254
-255
-256
-257
-258
-259
-260
-261
-262
 263
 264
 265
@@ -1217,10 +1357,65 @@ ORMs like ActiveRecord: further options</p>
 268
 269
 270
-271</pre>
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289
+290
+291
+292
+293
+294
+295
+296
+297
+298
+299
+300
+301
+302
+303
+304
+305
+306
+307
+308
+309
+310
+311
+312
+313
+314
+315
+316
+317
+318
+319
+320
+321
+322
+323
+324
+325
+326</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/hyper_record/class_methods.rb', line 208</span>
+      <pre class="code"><span class="info file"># File 'lib/hyper_record/class_methods.rb', line 263</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_has_and_belongs_to_many'>has_and_belongs_to_many</span><span class='lparen'>(</span><span class='id identifier rubyid_direction'>direction</span><span class='comma'>,</span> <span class='id identifier rubyid_name'>name</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span> <span class='label'>type:</span> <span class='kw'>nil</span> <span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='id identifier rubyid_name'>name</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span><span class='lparen'>(</span><span class='const'>Hash</span><span class='rparen'>)</span>
@@ -1378,61 +1573,6 @@ ORMs like ActiveRecord: further options</p>
       <pre class="lines">
 
 
-281
-282
-283
-284
-285
-286
-287
-288
-289
-290
-291
-292
-293
-294
-295
-296
-297
-298
-299
-300
-301
-302
-303
-304
-305
-306
-307
-308
-309
-310
-311
-312
-313
-314
-315
-316
-317
-318
-319
-320
-321
-322
-323
-324
-325
-326
-327
-328
-329
-330
-331
-332
-333
-334
-335
 336
 337
 338
@@ -1440,10 +1580,65 @@ ORMs like ActiveRecord: further options</p>
 340
 341
 342
-343</pre>
+343
+344
+345
+346
+347
+348
+349
+350
+351
+352
+353
+354
+355
+356
+357
+358
+359
+360
+361
+362
+363
+364
+365
+366
+367
+368
+369
+370
+371
+372
+373
+374
+375
+376
+377
+378
+379
+380
+381
+382
+383
+384
+385
+386
+387
+388
+389
+390
+391
+392
+393
+394
+395
+396
+397
+398</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/hyper_record/class_methods.rb', line 281</span>
+      <pre class="code"><span class="info file"># File 'lib/hyper_record/class_methods.rb', line 336</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_has_many'>has_many</span><span class='lparen'>(</span><span class='id identifier rubyid_direction'>direction</span><span class='comma'>,</span> <span class='id identifier rubyid_name'>name</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span> <span class='label'>type:</span> <span class='kw'>nil</span> <span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='id identifier rubyid_name'>name</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span><span class='lparen'>(</span><span class='const'>Hash</span><span class='rparen'>)</span>
@@ -1598,64 +1793,64 @@ ORMs like ActiveRecord: further options</p>
       <pre class="lines">
 
 
-353
-354
-355
-356
-357
-358
-359
-360
-361
-362
-363
-364
-365
-366
-367
-368
-369
-370
-371
-372
-373
-374
-375
-376
-377
-378
-379
-380
-381
-382
-383
-384
-385
-386
-387
-388
-389
-390
-391
-392
-393
-394
-395
-396
-397
-398
-399
-400
-401
-402
-403
-404
-405
-406
-407</pre>
+408
+409
+410
+411
+412
+413
+414
+415
+416
+417
+418
+419
+420
+421
+422
+423
+424
+425
+426
+427
+428
+429
+430
+431
+432
+433
+434
+435
+436
+437
+438
+439
+440
+441
+442
+443
+444
+445
+446
+447
+448
+449
+450
+451
+452
+453
+454
+455
+456
+457
+458
+459
+460
+461
+462</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/hyper_record/class_methods.rb', line 353</span>
+      <pre class="code"><span class="info file"># File 'lib/hyper_record/class_methods.rb', line 408</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_has_one'>has_one</span><span class='lparen'>(</span><span class='id identifier rubyid_direction'>direction</span><span class='comma'>,</span> <span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span> <span class='label'>type:</span> <span class='kw'>nil</span> <span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='id identifier rubyid_name'>name</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span><span class='lparen'>(</span><span class='const'>Hash</span><span class='rparen'>)</span>
@@ -1796,15 +1991,17 @@ if a id in the hash is given</p>
 17
 18
 19
-20</pre>
+20
+21</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'lib/hyper_record/class_methods.rb', line 8</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_record_hash'>record_hash</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='id identifier rubyid_record_hash'>record_hash</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='symbol'>:id</span><span class='rparen'>)</span>
-    <span class='kw'>if</span> <span class='id identifier rubyid__record_cache'>_record_cache</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='id identifier rubyid_record_hash'>record_hash</span><span class='lbracket'>[</span><span class='symbol'>:id</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='rparen'>)</span>
-      <span class='id identifier rubyid_record'>record</span> <span class='op'>=</span> <span class='id identifier rubyid__record_cache'>_record_cache</span><span class='period'>.</span><span class='id identifier rubyid_find'>find</span><span class='lparen'>(</span><span class='id identifier rubyid_record_hash'>record_hash</span><span class='lbracket'>[</span><span class='symbol'>:id</span><span class='rbracket'>]</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_sid'>sid</span> <span class='op'>=</span> <span class='id identifier rubyid_record_hash'>record_hash</span><span class='lbracket'>[</span><span class='symbol'>:id</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span>
+    <span class='kw'>if</span> <span class='id identifier rubyid__record_cache'>_record_cache</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='id identifier rubyid_sid'>sid</span><span class='rparen'>)</span>
+      <span class='id identifier rubyid_record'>record</span> <span class='op'>=</span> <span class='id identifier rubyid__record_cache'>_record_cache</span><span class='lbracket'>[</span><span class='id identifier rubyid_sid'>sid</span><span class='rbracket'>]</span>
       <span class='kw'>if</span> <span class='id identifier rubyid_record'>record</span>
         <span class='id identifier rubyid_record'>record</span><span class='period'>.</span><span class='id identifier rubyid__initialize_from_hash'>_initialize_from_hash</span><span class='lparen'>(</span><span class='id identifier rubyid_record_hash'>record_hash</span><span class='rparen'>)</span>
         <span class='id identifier rubyid_record'>record</span><span class='period'>.</span><span class='id identifier rubyid__register_observer'>_register_observer</span>
@@ -1864,7 +2061,6 @@ on failure the .fail block will receive the HTTP response object as arg</p>
       <pre class="lines">
 
 
-40
 41
 42
 43
@@ -1876,10 +2072,11 @@ on failure the .fail block will receive the HTTP response object as arg</p>
 49
 50
 51
-52</pre>
+52
+53</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/hyper_record/class_methods.rb', line 40</span>
+      <pre class="code"><span class="info file"># File 'lib/hyper_record/class_methods.rb', line 41</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_promise_all'>promise_all</span>
   <span class='id identifier rubyid__class_fetch_states'>_class_fetch_states</span><span class='lbracket'>[</span><span class='symbol'>:all</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>i</span><span class='tstring_end'>&#39;</span></span>
@@ -1966,13 +2163,13 @@ on failure the .fail block will receive the HTTP response object as arg</p>
       <pre class="lines">
 
 
-138
-139
-140
-141</pre>
+193
+194
+195
+196</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/hyper_record/class_methods.rb', line 138</span>
+      <pre class="code"><span class="info file"># File 'lib/hyper_record/class_methods.rb', line 193</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_promise_create'>promise_create</span><span class='lparen'>(</span><span class='id identifier rubyid_record_hash'>record_hash</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_record'>record</span> <span class='op'>=</span> <span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_record_hash'>record_hash</span><span class='rparen'>)</span>
@@ -2048,18 +2245,18 @@ on failure the .fail block will receive the HTTP response object as arg</p>
       <pre class="lines">
 
 
-171
-172
-173
-174
-175
-176
-177
-178
-179</pre>
+226
+227
+228
+229
+230
+231
+232
+233
+234</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/hyper_record/class_methods.rb', line 171</span>
+      <pre class="code"><span class="info file"># File 'lib/hyper_record/class_methods.rb', line 226</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_promise_find'>promise_find</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_sid'>sid</span> <span class='op'>=</span> <span class='id identifier rubyid_id'>id</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span>
@@ -2142,43 +2339,43 @@ no default or other value is known</p>
       <pre class="lines">
 
 
-422
-423
-424
-425
-426
-427
-428
-429
-430
-431
-432
-433
-434
-435
-436
-437
-438
-439
-440
-441
-442
-443
-444
-445
-446
-447
-448
-449
-450
-451
-452
-453
-454
-455</pre>
+477
+478
+479
+480
+481
+482
+483
+484
+485
+486
+487
+488
+489
+490
+491
+492
+493
+494
+495
+496
+497
+498
+499
+500
+501
+502
+503
+504
+505
+506
+507
+508
+509
+510</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/hyper_record/class_methods.rb', line 422</span>
+      <pre class="code"><span class="info file"># File 'lib/hyper_record/class_methods.rb', line 477</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_property'>property</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid__property_options'>_property_options</span><span class='lbracket'>[</span><span class='id identifier rubyid_name'>name</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span>
@@ -2273,12 +2470,12 @@ no default or other value is known</p>
       <pre class="lines">
 
 
-411
-412
-413</pre>
+466
+467
+468</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/hyper_record/class_methods.rb', line 411</span>
+      <pre class="code"><span class="info file"># File 'lib/hyper_record/class_methods.rb', line 466</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_record_cached?'>record_cached?</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='rparen'>)</span>
   <span class='id identifier rubyid__record_cache'>_record_cache</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='rparen'>)</span>
@@ -2327,12 +2524,12 @@ no default or other value is known</p>
       <pre class="lines">
 
 
-459
-460
-461</pre>
+514
+515
+516</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/hyper_record/class_methods.rb', line 459</span>
+      <pre class="code"><span class="info file"># File 'lib/hyper_record/class_methods.rb', line 514</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_reflections'>reflections</span>
   <span class='ivar'>@reflections</span> <span class='op'>||=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
@@ -2381,12 +2578,12 @@ no default or other value is known</p>
       <pre class="lines">
 
 
-565
-566
-567</pre>
+620
+621
+622</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/hyper_record/class_methods.rb', line 565</span>
+      <pre class="code"><span class="info file"># File 'lib/hyper_record/class_methods.rb', line 620</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_resource_base_uri'>resource_base_uri</span>
   <span class='ivar'>@resource</span> <span class='op'>||=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='const'><span class='object_link'><a href="../Hyperloop.html" title="Hyperloop (module)">Hyperloop</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../Hyperloop/Resource.html" title="Hyperloop::Resource (module)">Resource</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../Hyperloop/Resource/ClientDrivers.html" title="Hyperloop::Resource::ClientDrivers (class)">ClientDrivers</a></span></span><span class='period'>.</span><span class='id identifier rubyid_opts'><span class='object_link'><a href="../Hyperloop/Resource/ClientDrivers.html#opts-class_method" title="Hyperloop::Resource::ClientDrivers.opts (method)">opts</a></span></span><span class='lbracket'>[</span><span class='symbol'>:resource_api_base_path</span><span class='rbracket'>]</span><span class='embexpr_end'>}</span><span class='tstring_content'>/</span><span class='embexpr_beg'>#{</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='period'>.</span><span class='id identifier rubyid_underscore'>underscore</span><span class='period'>.</span><span class='id identifier rubyid_pluralize'>pluralize</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
@@ -2464,47 +2661,47 @@ method call in progress</p>
       <pre class="lines">
 
 
-470
-471
-472
-473
-474
-475
-476
-477
-478
-479
-480
-481
-482
-483
-484
-485
-486
-487
-488
-489
-490
-491
-492
-493
-494
-495
-496
-497
-498
-499
-500
-501
-502
-503
-504
-505
-506
-507</pre>
+525
+526
+527
+528
+529
+530
+531
+532
+533
+534
+535
+536
+537
+538
+539
+540
+541
+542
+543
+544
+545
+546
+547
+548
+549
+550
+551
+552
+553
+554
+555
+556
+557
+558
+559
+560
+561
+562</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/hyper_record/class_methods.rb', line 470</span>
+      <pre class="code"><span class="info file"># File 'lib/hyper_record/class_methods.rb', line 525</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_rest_class_method'>rest_class_method</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span> <span class='label'>default_result:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>...</span><span class='tstring_end'>&#39;</span></span> <span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_rest_class_methods'>rest_class_methods</span><span class='lbracket'>[</span><span class='id identifier rubyid_name'>name</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span>
@@ -2588,12 +2785,12 @@ method call in progress</p>
       <pre class="lines">
 
 
-559
-560
-561</pre>
+614
+615
+616</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/hyper_record/class_methods.rb', line 559</span>
+      <pre class="code"><span class="info file"># File 'lib/hyper_record/class_methods.rb', line 614</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_rest_class_methods'>rest_class_methods</span>
   <span class='ivar'>@rest_class_methods</span> <span class='op'>||=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
@@ -2615,8 +2812,8 @@ method call in progress</p>
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>macro define rest_class_methods, RPC on instance level of a record of
-current HyperRecord class</p>
+<p>macro define rest_methods, RPC on instance level of a record of current
+HyperRecord class</p>
 
 <p>This macro defines additional methods:</p>
 
@@ -2671,49 +2868,49 @@ method call in progress</p>
       <pre class="lines">
 
 
-516
-517
-518
-519
-520
-521
-522
-523
-524
-525
-526
-527
-528
-529
-530
-531
-532
-533
-534
-535
-536
-537
-538
-539
-540
-541
-542
-543
-544
-545
-546
-547
-548
-549
-550
-551
-552
-553
-554
-555</pre>
+571
+572
+573
+574
+575
+576
+577
+578
+579
+580
+581
+582
+583
+584
+585
+586
+587
+588
+589
+590
+591
+592
+593
+594
+595
+596
+597
+598
+599
+600
+601
+602
+603
+604
+605
+606
+607
+608
+609
+610</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/hyper_record/class_methods.rb', line 516</span>
+      <pre class="code"><span class="info file"># File 'lib/hyper_record/class_methods.rb', line 571</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_rest_method'>rest_method</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='lbrace'>{</span> <span class='label'>default_result:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>...</span><span class='tstring_end'>&#39;</span></span> <span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='comment'># @!method promise_[name]
@@ -2825,46 +3022,46 @@ client side options are ignored</p>
       <pre class="lines">
 
 
-576
-577
-578
-579
-580
-581
-582
-583
-584
-585
-586
-587
-588
-589
-590
-591
-592
-593
-594
-595
-596
-597
-598
-599
-600
-601
-602
-603
-604
-605
-606
-607
-608
-609
-610
-611
-612</pre>
+631
+632
+633
+634
+635
+636
+637
+638
+639
+640
+641
+642
+643
+644
+645
+646
+647
+648
+649
+650
+651
+652
+653
+654
+655
+656
+657
+658
+659
+660
+661
+662
+663
+664
+665
+666
+667</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/hyper_record/class_methods.rb', line 576</span>
+      <pre class="code"><span class="info file"># File 'lib/hyper_record/class_methods.rb', line 631</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_scope'>scope</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span>
   <span class='comment'># @!method promise_[name]
@@ -2947,12 +3144,12 @@ client side options are ignored</p>
       <pre class="lines">
 
 
-616
-617
-618</pre>
+671
+672
+673</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/hyper_record/class_methods.rb', line 616</span>
+      <pre class="code"><span class="info file"># File 'lib/hyper_record/class_methods.rb', line 671</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_scopes'>scopes</span>
   <span class='ivar'>@scopes</span> <span class='op'>||=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
@@ -2967,7 +3164,7 @@ client side options are ignored</p>
 </div>
 
       <div id="footer">
-  Generated on Sun Jun 10 23:20:59 2018 by
+  Generated on Tue Aug 14 17:40:32 2018 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.13 (ruby-2.5.1).
 </div>

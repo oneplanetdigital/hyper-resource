@@ -287,7 +287,13 @@
 89
 90
 91
-92</pre>
+92
+93
+94
+95
+96
+97
+98</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'lib/hyperloop/resource/client_drivers.rb', line 53</span>
@@ -328,7 +334,13 @@
     <span class='kw'>when</span> <span class='symbol'>:action_cable</span>
       <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:action_cable_consumer</span><span class='rbracket'>]</span> <span class='op'>=</span>
         <span class='backtick'>`</span><span class='tstring_content'>ActionCable.createConsumer.apply(ActionCable, </span><span class='embexpr_beg'>#{</span><span class='lbracket'>[</span><span class='op'>*</span><span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:action_cable_consumer_url</span><span class='rbracket'>]</span><span class='rbracket'>]</span><span class='embexpr_end'>}</span><span class='tstring_content'>)</span><span class='tstring_end'>`</span></span>
-      <span class='const'><span class='object_link'><a href="../../Hyperloop.html" title="Hyperloop (module)">Hyperloop</a></span></span><span class='period'>.</span><span class='id identifier rubyid_connect'>connect</span><span class='lparen'>(</span><span class='op'>*</span><span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:auto_connect</span><span class='rbracket'>]</span><span class='rparen'>)</span>
+      <span class='backtick'>%x{</span><span class='tstring_content'>
+        </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:action_cable_consumer</span><span class='rbracket'>]</span><span class='embexpr_end'>}</span><span class='tstring_content'>.subscriptions.create({ channel: &#39;ResourceChannel&#39;, channel_id: </span><span class='embexpr_beg'>#{</span><span class='ivar'>@opts</span><span class='lbracket'>[</span><span class='symbol'>:hyper_record_update_channel</span><span class='rbracket'>]</span><span class='embexpr_end'>}</span><span class='tstring_content'> }, {
+            received: function(data) {
+              return Opal.Hyperloop.$const_get(&#39;Resource&#39;).$const_get(&#39;ClientDrivers&#39;).$process_notification(Opal.Hash.$new(data));
+            }
+          })
+        </span><span class='tstring_end'>}</span></span>
     <span class='kw'>end</span>
   <span class='kw'>end</span>
 <span class='kw'>end</span></pre>
@@ -342,7 +354,7 @@
 </div>
 
       <div id="footer">
-  Generated on Sun Jun 10 23:21:00 2018 by
+  Generated on Tue Aug 14 17:40:33 2018 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.13 (ruby-2.5.1).
 </div>
