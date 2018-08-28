@@ -7,17 +7,7 @@ module HyperRecord
       rest_methods[name] = options
       rest_methods[name][:params] = block.arity
       define_method(name) do
-        array_of_records = instance_exec(&block)
-        array_of_records.map do |record|
-          subscribe_record(record)
-          record_json = record.as_json
-          record_model = record.class.to_s.underscore
-          if record_json.has_key?(record_model)
-            record_json
-          else
-            { record_model => record_json }
-          end
-        end
+        instance_exec(&block)
       end
     end
 
