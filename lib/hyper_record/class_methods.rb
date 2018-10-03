@@ -405,7 +405,7 @@ module HyperRecord
     # @param options [Hash] further options for ORMs like Neo4j
     #
     # This macro defines additional methods:
-    def has_one(direction, name, options = { type: nil })
+    def has_one(direction, name = nil, options = { type: nil })
       if name.is_a?(Hash)
         options.merge(name)
         name = direction
