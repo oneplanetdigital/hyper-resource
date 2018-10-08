@@ -137,7 +137,7 @@ module HyperRecord
       define_method("promise_#{name}") do
         @fetch_states[name] = 'i'
         unless @rest_methods.has_key?(name)
-          @rest_methods[name] = options
+          @rest_methods[name] = {}.merge!(options)
           @rest_methods[name] = { result: options[:default_result] }
           @update_on_link[name] = {}
         end
@@ -159,7 +159,7 @@ module HyperRecord
       define_method(name) do
         _register_observer
         unless @rest_methods.has_key?(name)
-          @rest_methods[name] = options
+          @rest_methods[name] = {}.merge!(options)
           @rest_methods[name] = { result: options[:default_result] }
           @update_on_link[name] = {}
         end
@@ -575,7 +575,7 @@ module HyperRecord
       define_method("promise_#{name}") do |*args|
         name_args = self.class._name_args(name, *args)
         @fetch_states[name_args] = 'i'
-        @rest_methods[name] = options unless @rest_methods.has_key?(name)
+        @rest_methods[name] = {}.merge!(options) unless @rest_methods.has_key?(name)
         @rest_methods[name_args] = { result: options[:default_result] } unless @rest_methods.has_key?(name_args)
         raise "#{self.class.to_s}[_no_id_].#{name}, can't execute instance rest_method without id!" unless self.id
         self.class._promise_get_or_patch("#{resource_base_uri}/#{self.id}/methods/#{name}.json?timestamp=#{`Date.now() + Math.random()`}", *args).then do |response_json|
@@ -594,7 +594,7 @@ module HyperRecord
       define_method(name) do |*args|
         _register_observer
         name_args = self.class._name_args(name, *args)
-        @rest_methods[name] = options unless @rest_methods.has_key?(name)
+        @rest_methods[name] = {}.merge!(options) unless @rest_methods.has_key?(name)
         @rest_methods[name_args] = { result: options[:default_result] } unless @rest_methods.has_key?(name_args)
         unless @fetch_states.has_key?(name_args) && 'fi'.include?(@fetch_states[name_args])
           self.send("promise_#{name}", *args)
