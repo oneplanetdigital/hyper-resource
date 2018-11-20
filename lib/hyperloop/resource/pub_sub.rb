@@ -19,6 +19,7 @@ module Hyperloop
 
       # (see HyperRecord::ClassMethods#publish_record)
       def publish_record(record)
+        Rails.logger.info "||||| 5. PUBLISH RECORD #{record}"
         subscribers = Hyperloop.redis_instance.hgetall("HRPS__#{record.class}__#{record.id}")
         time_now = Time.now.to_f
         scrub_time = time_now - 24.hours.to_f
@@ -28,8 +29,10 @@ module Hyperloop
           id: record.id,
           updated_at: record.updated_at
         }
+        Rails.logger.info "||||| 6 PUBLISH RECORD ::::: #{message}"
         message[:destroyed] = true if record.destroyed?
 
+        Rails.logger.info "||||| 7 PUBLISH RECORD SUSBRIBERS SIZE::::: #{subscribers.size}"
         # can only trigger to max 10 channels at once on pusher
         subscribers.each_slice(10) do |slice|
           channel_array = []
@@ -171,7 +174,9 @@ module Hyperloop
       end
 
       def subscribe_record(record)
+        Rails.logger.info "||||| 2. SUBSCRIBE RECORD #{record}"
         return unless session.id
+        Rails.logger.info "||||| 3. SUBSCRIBE RECORD #{session.id}"
         Hyperloop.redis_instance.hset "HRPS__#{record.class}__#{record.id}", session.id.to_s, Time.now.to_f.to_s
       end
 
@@ -224,7 +229,9 @@ module Hyperloop
       end
 
       def pub_sub_record(record)
+        Rails.logger.info "||||| 1. CALLING PUB SUB #{record}"
         subscribe_record(record)
+
         publish_record(record)
       end
 
@@ -250,3 +257,4 @@ module Hyperloop
     end
   end
 end
+
