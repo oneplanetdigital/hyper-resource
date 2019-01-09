@@ -7,7 +7,9 @@ module HyperRecord
       rest_methods[name] = options
       rest_methods[name][:params] = block.arity
       define_method(name) do
-        instance_exec(&block)
+        result = instance_exec(&block)
+        result = result.map { |i| { i.class.to_s.underscore => i }} if defined?(ActiveRecord) && result.is_a?(ActiveRecord::Relation)
+        result
       end
     end
 
