@@ -6,7 +6,9 @@ module HyperRecord
     def collection_query_method(name, &block)
       collection_query_methods[name] = {}
       define_method(name) do
-        instance_exec(&block)
+        result = instance_exec(&block)
+        result = result.map { |i| { i.class.to_s.underscore => i }} if defined?(ActiveRecord) && result.is_a?(ActiveRecord::Relation)
+        result
       end
       define_method("promise_#{name}") do
         p = Promise.new(success: proc { send(name) })
