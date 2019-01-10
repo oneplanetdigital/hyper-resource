@@ -8,7 +8,7 @@ module HyperRecord
       rest_methods[name][:params] = block.arity
       define_method(name) do
         result = instance_exec(&block)
-        result = result.map { |i| { i.class.to_s.underscore => i }} if result.is_a?(Array) || (defined?(ActiveRecord) && result.is_a?(ActiveRecord::Relation))
+        result = result.map { |i| { i.class.to_s.underscore => i }} if defined?(ActiveRecord) && result.first&.is_a?(ActiveRecord::Base)
         result
       end
     end
