@@ -6,8 +6,8 @@ module HyperRecord
     def collection_query_method(name, options = { default_result: [] }, &block)
       rest_methods[name] = options
       rest_methods[name][:params] = block.arity
-      define_method(name) do
-        result = instance_exec(&block)
+      define_method(name) do |*args|
+        result = instance_exec(*args, &block)
         result = result.map { |i| { i.class.to_s.underscore => i }} if defined?(ActiveRecord) && result.first&.is_a?(ActiveRecord::Base)
         result
       end
