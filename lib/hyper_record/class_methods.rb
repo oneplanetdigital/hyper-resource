@@ -134,20 +134,21 @@ module HyperRecord
       # @!method promise_[name]
       # @return [Promise] on success the .then block will receive the result of the RPC call as arg
       #    on failure the .fail block will receive the HTTP response object as arg
-      define_method("promise_#{name}") do
-        @fetch_states[name] = 'i'
+      define_method("promise_#{name}") do |*args|
+        name_args = self.class._name_args(name, *args)
+        @fetch_states[name_args] = 'i'
         unless @rest_methods.has_key?(name)
           @rest_methods[name] = {}.merge!(options)
-          @rest_methods[name] = { result: options[:default_result] }
-          @update_on_link[name] = {}
+          @update_on_link[name_args] = {}
         end
+        @rest_methods[name_args] = { result: options[:default_result] } unless @rest_methods.has_key?(name_args)
         raise "#{self.class.to_s}[_no_id_].#{name}, can't execute instance collection_query_method without id!" unless self.id
-        self.class._promise_get_or_patch("#{resource_base_uri}/#{self.id}/methods/#{name}.json?timestamp=#{`Date.now() + Math.random()`}").then do |response_json|
+        self.class._promise_get_or_patch("#{resource_base_uri}/#{self.id}/methods/#{name}.json?timestamp=#{`Date.now() + Math.random()`}", *args).then do |response_json|
           collection = self.class._convert_array_to_collection(response_json[:result], self)
-          @rest_methods[name][:result] = collection
-          @fetch_states[name] = 'f'
+          @rest_methods[name_args][:result] = collection
+          @fetch_states[name_args] = 'f'
           _notify_observers
-          @rest_methods[name][:result]
+          @rest_methods[name_args][:result]
         end.fail do |response|
           error_message = "#{self.class.to_s}[#{self.id}].#{name}, a collection_query_method, failed to execute!"
           `console.error(error_message)`
@@ -156,22 +157,23 @@ module HyperRecord
       end
       # @!method [name]
       # @return result either the default_result ass specified in the options or the real result if the RPC call already finished
-      define_method(name) do
+      define_method(name) do |*args|
         _register_observer
+        name_args = self.class._name_args(name, *args)
         unless @rest_methods.has_key?(name)
           @rest_methods[name] = {}.merge!(options)
-          @rest_methods[name] = { result: options[:default_result] }
-          @update_on_link[name] = {}
+          @update_on_link[name_args] = {}
         end
-        unless @fetch_states.has_key?(name) && 'fi'.include?(@fetch_states[name])
-          self.send("promise_#{name}")
+        @rest_methods[name_args] = { result: options[:default_result] } unless @rest_methods.has_key?(name_args)
+        unless @fetch_states.has_key?(name_args) && 'fi'.include?(@fetch_states[name_args])
+          self.send("promise_#{name}", *args)
         end
-        @rest_methods[name][:result]
+        @rest_methods[name_args][:result]
       end
       # @!method update_[name] mark internal structures so that the method is called again once it is requested again
       # @return nil
-      define_method("update_#{name}") do
-        @fetch_states[name] = 'u'
+      define_method("update_#{name}") do |*args|
+        @fetch_states[self.class._name_args(name, *args)] = 'u'
         nil
       end
     end
