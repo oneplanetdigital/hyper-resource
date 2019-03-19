@@ -44,6 +44,8 @@ module HyperRecord
         collection = _convert_array_to_collection(response.json[self.to_s.underscore.pluralize])
         _class_fetch_states[:all] = 'f'
         _notify_class_observers
+        warn_message = "#{self.to_s}.all has been called. This may potentially load a lot of data and cause memory and performance problems."
+        `console.warn(warn_message)`
         collection
       end.fail do |response|
         error_message = "#{self.to_s}.all failed to fetch records!"
@@ -145,6 +147,7 @@ module HyperRecord
         raise "#{self.class.to_s}[_no_id_].#{name}, can't execute instance collection_query_method without id!" unless self.id
         self.class._promise_get_or_patch("#{resource_base_uri}/#{self.id}/methods/#{name}.json?timestamp=#{`Date.now() + Math.random()`}", *args).then do |response_json|
           collection = self.class._convert_array_to_collection(response_json[:result], self)
+          raise "#{self.class.to_s}[#{self.id}].#{name}, something wrong in this collection_query_method, collection is nil!" if collection == nil
           @rest_methods[name_args][:result] = collection
           @fetch_states[name_args] = 'f'
           _notify_observers
