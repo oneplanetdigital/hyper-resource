@@ -143,7 +143,7 @@ module HyperRecord
           @rest_methods[name] = {}.merge!(options)
           @update_on_link[name_args] = {}
         end
-        @rest_methods[name_args] = { result: options[:default_result] } unless @rest_methods.has_key?(name_args)
+        @rest_methods[name_args] = { result: options[:default_result] } unless @rest_methods.has_key?(name_args) && @rest_methods[name_args].has_key?(:result)
         raise "#{self.class.to_s}[_no_id_].#{name}, can't execute instance collection_query_method without id!" unless self.id
         self.class._promise_get_or_patch("#{resource_base_uri}/#{self.id}/methods/#{name}.json?timestamp=#{`Date.now() + Math.random()`}", *args).then do |response_json|
           collection = self.class._convert_array_to_collection(response_json[:result], self)
@@ -167,7 +167,7 @@ module HyperRecord
           @rest_methods[name] = {}.merge!(options)
           @update_on_link[name_args] = {}
         end
-        @rest_methods[name_args] = { result: options[:default_result] } unless @rest_methods.has_key?(name_args)
+        @rest_methods[name_args] = { result: options[:default_result] } unless @rest_methods.has_key?(name_args) && @rest_methods[name_args].has_key?(:result)
         unless @fetch_states.has_key?(name_args) && 'fi'.include?(@fetch_states[name_args])
           self.send("promise_#{name}", *args)
         end
@@ -581,7 +581,7 @@ module HyperRecord
         name_args = self.class._name_args(name, *args)
         @fetch_states[name_args] = 'i'
         @rest_methods[name] = {}.merge!(options) unless @rest_methods.has_key?(name)
-        @rest_methods[name_args] = { result: options[:default_result] } unless @rest_methods.has_key?(name_args)
+        @rest_methods[name_args] = { result: options[:default_result] } unless @rest_methods.has_key?(name_args) && @rest_methods[name_args].has_key?(:result)
         raise "#{self.class.to_s}[_no_id_].#{name}, can't execute instance rest_method without id!" unless self.id
         self.class._promise_get_or_patch("#{resource_base_uri}/#{self.id}/methods/#{name}.json?timestamp=#{`Date.now() + Math.random()`}", *args).then do |response_json|
           @rest_methods[name_args][:result] = response_json[:result] # result is parsed json
@@ -600,7 +600,7 @@ module HyperRecord
         _register_observer
         name_args = self.class._name_args(name, *args)
         @rest_methods[name] = {}.merge!(options) unless @rest_methods.has_key?(name)
-        @rest_methods[name_args] = { result: options[:default_result] } unless @rest_methods.has_key?(name_args)
+        @rest_methods[name_args] = { result: options[:default_result] } unless @rest_methods.has_key?(name_args) && @rest_methods[name_args].has_key?(:result)
         unless @fetch_states.has_key?(name_args) && 'fi'.include?(@fetch_states[name_args])
           self.send("promise_#{name}", *args)
         end
