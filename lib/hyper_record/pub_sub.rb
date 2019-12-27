@@ -34,6 +34,8 @@ module HyperRecord
         }
         message[:destroyed] = true if record.destroyed?
 
+        Rails.logger.debug "&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"
+
         Rails.logger.debug "========================================================== #{subscribers}"
         Rails.logger.debug "========================================================== #{subscribers.size}"
 
@@ -51,7 +53,8 @@ module HyperRecord
               next
             end
             Rails.logger.debug "========================================================== SESSION ID : #{session_id} !"
-
+            Rails.logger.debug "========================================================== RECORD CLASS : #{record.class} !"
+            Rails.logger.debug "========================================================== RECORD ID : #{record.id} !"
             channel_array << "hyper-record-update-channel-#{session_id}"
           end
           Rails.logger.debug "========================================================== CHANNEL ARRAY #{channel_array} !"
@@ -59,6 +62,8 @@ module HyperRecord
           return if channel_array.size == 0
           if Hyperloop.resource_transport == :pusher
             _pusher_client.trigger_async(channel_array, 'update', message)
+            Rails.logger.debug "========================================================== PUSHER #{channel_array} !"
+
           elsif Hyperloop.resource_transport == :action_cable
             channel_array.each do |channel|
               Rails.logger.debug "========================================================== BROADCAST #{channel} !"
