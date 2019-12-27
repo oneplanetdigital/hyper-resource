@@ -34,21 +34,35 @@ module HyperRecord
         }
         message[:destroyed] = true if record.destroyed?
 
+        Rails.logger.debug "========================================================== #{subscribers}"
+        Rails.logger.debug "========================================================== #{subscribers.size}"
+
+
         # can only trigger to max 10 channels at once on pusher
         subscribers.each_slice(10) do |slice|
+          Rails.logger.debug "========================================================== EACH SLICE !"
+
           channel_array = []
           slice.each do |session_id, last_requested|
+            Rails.logger.debug "========================================================== SLICE !"
+
             if last_requested.to_f < scrub_time
               Hyperloop.redis_instance.hdel("HRPS__#{record.class}__#{record.id}", session_id)
               next
             end
+            Rails.logger.debug "========================================================== SESSION ID : #{session_id} !"
+
             channel_array << "hyper-record-update-channel-#{session_id}"
           end
+          Rails.logger.debug "========================================================== CHANNEL ARRAY #{channel_array} !"
+
           return if channel_array.size == 0
           if Hyperloop.resource_transport == :pusher
             _pusher_client.trigger_async(channel_array, 'update', message)
           elsif Hyperloop.resource_transport == :action_cable
             channel_array.each do |channel|
+              Rails.logger.debug "========================================================== BROADCAST #{channel} !"
+
               ActionCable.server.broadcast(channel, message)
             end
           end
