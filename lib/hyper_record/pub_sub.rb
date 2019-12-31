@@ -36,17 +36,17 @@ module HyperRecord
 
         Rails.logger.debug "&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"
 
-        Rails.logger.debug "========================================================== #{subscribers}"
-        Rails.logger.debug "========================================================== #{subscribers.size}"
+        Rails.logger.debug "========================================== SUBSCRIBERS ================ #{subscribers}"
+        Rails.logger.debug "=========================================== SUBSCRIBERS SIZE =============== #{subscribers.size}"
 
 
         # can only trigger to max 10 channels at once on pusher
         subscribers.each_slice(10) do |slice|
           Rails.logger.debug "========================================================== EACH SLICE !"
-
+          Rails.logger.debug "=============================================SLICE============= #{slice}"
+          Rails.logger.debug "=============================================SLICE SIZE============= #{slice.size}"
           channel_array = []
           slice.each do |session_id, last_requested|
-            Rails.logger.debug "========================================================== SLICE !"
 
             if last_requested.to_f < scrub_time
               Hyperloop.redis_instance.hdel("HRPS__#{record.class}__#{record.id}", session_id)
