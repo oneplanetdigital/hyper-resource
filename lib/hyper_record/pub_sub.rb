@@ -59,18 +59,20 @@ module HyperRecord
           end
           Rails.logger.debug "========================================================== CHANNEL ARRAY #{channel_array} !"
 
-          return if channel_array.size == 0
-          if Hyperloop.resource_transport == :pusher
-            _pusher_client.trigger_async(channel_array, 'update', message)
-            Rails.logger.debug "========================================================== PUSHER #{channel_array} !"
+          if channel_array.size > 0
+            if Hyperloop.resource_transport == :pusher
+              _pusher_client.trigger_async(channel_array, 'update', message)
+              Rails.logger.debug "========================================================== PUSHER #{channel_array} !"
 
-          elsif Hyperloop.resource_transport == :action_cable
-            channel_array.each do |channel|
-              Rails.logger.debug "========================================================== BROADCAST #{channel} !"
+            elsif Hyperloop.resource_transport == :action_cable
+              channel_array.each do |channel|
+                Rails.logger.debug "========================================================== BROADCAST #{channel} !"
 
-              ActionCable.server.broadcast(channel, message)
+                ActionCable.server.broadcast(channel, message)
+              end
             end
           end
+
         end
         Hyperloop.redis_instance.del("HRPS__#{record.class}__#{record.id}") if record.destroyed?
       end
